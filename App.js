@@ -1,4 +1,4 @@
-import { CameraView, CameraType, useCameraPermissions } from 'expo-camera';
+import { CameraView, CameraType, useCameraPermissions, Camera } from 'expo-camera';
 import { useState, useRef } from 'react';
 import {Entypo} from '@expo/vector-icons';
 import * as sharing from 'expo-sharing';
@@ -31,14 +31,26 @@ export default function App() {
 
   return(
     <View>
-      <CameraView style={{height: 300, width: 300}} ref={cameraRef} type={modo}/>
-      <TouchableOpacity onPress={trocarCamera}>
-        <Entypo name="cycle" size={24} color="black" />
-      </TouchableOpacity>
-      <Button title="Tirar foto" onPress={async () => {
-        const foto = await cameraRef.current.takePictureAsync();
-        setFoto(foto.uri);
-      }} />
+      <CameraView style={{height: 300, width: 300}} ref={cameraRef} type={modo}>
+        <View>
+
+          <TouchableOpacity onPress={trocarCamera}>
+            <Entypo name="cycle" size={24} color="black" />
+            <Text>Trocar</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={async () => {
+            if(cameraRef.current) {
+              const foto = await cameraRef.current.takePictureAsync();
+              setFoto(foto.uri);
+            }}}>
+
+              <Entypo name="camera" size={24} color="black" />
+              <Text>Tirar foto</Text>
+
+            </TouchableOpacity>
+        </View>
+      </CameraView>
       {foto && <Image source={{uri: foto}} style={{height: 300, width: 300}} />}
     </View>
   );
